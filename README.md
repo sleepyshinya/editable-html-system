@@ -1,10 +1,10 @@
 # Editable HTML System
 
-> 生成「可编辑系统」HTML 文档的 WorkBuddy Skill —— 不是静态页面，而是配置驱动、面板可编辑、版本可管理的文档系统。
+> 生成「可编辑系统」HTML 文档的 AI Agent Skill —— 不是静态页面，而是配置驱动、面板可编辑、版本可管理的文档系统。兼容 Claude Code、Cursor、Windsurf、WorkBuddy 等主流 agent。
 
 ## 这是什么
 
-这是一个 [WorkBuddy](https://www.codebuddy.cn/) Skill。安装后，当你需要创建 HTML 文档时，它会生成一个**可编辑系统**而非一次性静态页面：
+这是一个 **agent skill**（遵循 `SKILL.md` + frontmatter 通用格式）。安装到任何支持的 AI agent 后，当你需要创建 HTML 文档时，它会生成一个**可编辑系统**而非一次性静态页面：
 
 - 所有可编辑内容（标题、数字、说明、显隐、顺序、样式）集中在 `config.js` 配置层
 - 右侧编辑面板支持实时修改文案、数字、样式权重、模块顺序、显隐切换
@@ -73,33 +73,66 @@ const DOC_CONFIG = {
 
 ## 安装
 
-### 方式一：下载 .skill 文件安装
+此 skill 使用通用的 `SKILL.md` + frontmatter 格式，兼容所有主流 AI agent。
 
+### Claude Code
+
+```bash
+git clone https://github.com/sleepyshinya/editable-html-system.git
+cp -r editable-html-system ~/.claude/skills/
+```
+
+重启 Claude Code 即可自动加载。
+
+### Cursor
+
+```bash
+git clone https://github.com/sleepyshinya/editable-html-system.git
+# 复制到 Cursor rules/skills 目录
+cp -r editable-html-system ~/.cursor/skills/
+```
+
+### Windsurf
+
+```bash
+git clone https://github.com/sleepyshinya/editable-html-system.git
+cp -r editable-html-system ~/.codeium/windsurf/skills/
+```
+
+### WorkBuddy
+
+方式一 — 导入 `.skill` 文件：
 1. 下载 [最新 Release](../../releases) 中的 `editable-html-system.skill` 文件
 2. 在 WorkBuddy 中打开 Skill 管理页面
-3. 导入 `.skill` 文件即可
+3. 导入 `.skill` 文件
 
-### 方式二：手动安装
+方式二 — 手动安装：
+```bash
+git clone https://github.com/sleepyshinya/editable-html-system.git
+cp -r editable-html-system ~/.workbuddy/skills/
+```
 
-1. 克隆本仓库：
-   ```bash
-   git clone https://github.com/<your-username>/editable-html-system.git
-   ```
-2. 将 `editable-html-system` 目录复制到 WorkBuddy skills 目录：
-   ```bash
-   cp -r editable-html-system ~/.workbuddy/skills/
-   ```
-3. 重启 WorkBuddy，skill 自动加载
+### 其他 Agent
+
+只要你的 agent 支持 `SKILL.md` + frontmatter 格式（`name` + `description` 字段），将 `editable-html-system` 目录复制到对应的 skills/rules 目录即可。核心格式如下：
+
+```yaml
+---
+name: editable-html-system
+description: >
+  Generate HTML documents as "editable systems"...
+---
+```
 
 ## 使用
 
-安装后，在 WorkBuddy 对话中描述你要创建的文档即可触发，例如：
+安装后，在 agent 对话中描述你要创建的文档即可触发：
 
 - 「帮我生成一个季度业务汇报的 HTML 文档」
 - 「创建一个可编辑的产品介绍页面」
 - 「做一个配置驱动的项目看板」
 
-触发词包括：可编辑系统、配置驱动、生成html文档、编辑面板、版本管理、不要静态页面。
+触发词包括：可编辑系统、配置驱动、生成html文档、编辑面板、版本管理、不要静态页面、config-driven html、editable html document。
 
 ## Skill 结构
 
@@ -124,6 +157,18 @@ editable-html-system/
 - 版本快照智能序列化（数据序列化，compute 函数保留在原 config 中）
 - 导出时用正则还原函数表达式，生成完整可用的 config.js
 - 支持 `localStorage` 版本管理 + 文件导出双轨备份
+
+## 兼容性
+
+| Agent | 支持 | 安装路径 |
+|---|---|---|
+| Claude Code | `~/.claude/skills/` | 原生支持 SKILL.md 格式 |
+| Cursor | `~/.cursor/skills/` 或 `.cursorrules` | frontmatter 格式兼容 |
+| Windsurf | `~/.codeium/windsurf/skills/` | frontmatter 格式兼容 |
+| WorkBuddy | `~/.workbuddy/skills/` | 原生支持，可导入 .skill 文件 |
+| 其他支持 SKILL.md 的 agent | 对应 skills 目录 | 只要能读取 SKILL.md + frontmatter 即可 |
+
+> 核心是 `SKILL.md` + frontmatter（`name` + `description`），这是 agent skill 的通用格式。模板文件（`assets/template/`）和参考文档（`references/`）对任何 agent 都适用，不依赖特定平台 API。
 
 ## 设计哲学
 
