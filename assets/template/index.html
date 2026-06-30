@@ -410,11 +410,14 @@
   };
 
   // 样式对象 → CSS 字符串
+  // 无单位属性不加 px（lineHeight/fontWeight 等是纯数字）
+  const UNITLESS_PROPS = { lineHeight:1, fontWeight:1, opacity:1, zIndex:1, flexGrow:1, flexShrink:1, order:1 };
   function styleStr(s){
     if(!s) return '';
     return Object.entries(s).map(([k,v])=>{
       const prop=k.replace(/([A-Z])/g,'-$1').toLowerCase();
-      const val=(typeof v==='number'&&/font|size|width|height|gap|padding|margin|radius|line/.test(k))?v+'px':v;
+      const needsUnit = typeof v==='number' && !UNITLESS_PROPS[k] && /font|size|width|height|gap|padding|margin|radius|border/.test(k);
+      const val = needsUnit ? v+'px' : v;
       return prop+':'+val;
     }).join(';');
   }
